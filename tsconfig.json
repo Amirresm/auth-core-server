@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"composite": true,
+		"baseUrl": ".",
+		"outDir": "./dist",
+		"target": "ESNext",
+		"useDefineForClassFields": true,
+		"lib": ["DOM", "DOM.Iterable", "ESNext"],
+		"allowJs": false,
+		"skipLibCheck": true,
+		"esModuleInterop": false,
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"module": "ESNext",
+		"moduleResolution": "Node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"jsx": "react-jsx"
+	},
+	"include": ["src", "postcss.config.js", "tailwind.config.js"],
+	"references": [{ "path": "./tsconfig.node.json" }]
+}
