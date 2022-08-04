@@ -7,11 +7,15 @@ import {
 	Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import qs from "query-string";
 import Container from "src/components/Container";
 
 export default function Login() {
 	const navigate = useNavigate();
+	const location = useLocation();
+	const { redirect } = qs.parse(location.search);
+
 	const [username, setUsername] = useState("");
 
 	const handleRegister = () => {
@@ -19,7 +23,13 @@ export default function Login() {
 	};
 
 	const handleRedirectBack = () => {
-		window.location.href = `http://localhost:6000?username=${username}`;
+		if (redirect && !Array.isArray(redirect)) {
+			const params = new URLSearchParams(redirect?.split("?")[1]);
+			params.set("token", `token: ${username}`);
+
+			const url = `${redirect?.split("?")[0]}?${params.toString()}`;
+			window.location.href = url;
+		}
 	};
 
 	return (
