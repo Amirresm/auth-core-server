@@ -37,7 +37,9 @@ router.post(
     const token = signJWT({
       id: user.id,
     });
-    return res.status(200).send({ token, user: { username: user.username } });
+    return res
+      .status(200)
+      .send({ token: `bearer ${token}`, user: { username: user.username } });
   }
 );
 
@@ -61,12 +63,14 @@ router.post(
     const token = signJWT({
       id: user.id,
     });
-    return res.status(200).send({ token, user: { username: user.username } });
+    return res
+      .status(200)
+      .send({ token: `bearer ${token}`, user: { username: user.username } });
   }
 );
 
 router.get("/verify", (req, res) => {
-  const token = req.headers.authorization;
+  const token = req.headers.authorization?.split("bearer ")[1];
   try {
     verifyJWT(token || "");
     return res.status(200).send("OK");
@@ -76,8 +80,7 @@ router.get("/verify", (req, res) => {
 });
 
 router.post("/verify", (req, res) => {
-  const { token } = req.body;
-  console.log(token);
+  const token = req.body.token?.split("bearer ")[1];
 
   try {
     verifyJWT(token || "");
@@ -88,7 +91,7 @@ router.post("/verify", (req, res) => {
 });
 
 router.get("/info", async (req, res) => {
-  const token = req.headers.authorization?.split("token: ")[1];
+  const token = req.headers.authorization?.split("bearer ")[1];
   try {
     const data = verifyJWT(token || "");
     const user = await prisma.user.findUnique({
