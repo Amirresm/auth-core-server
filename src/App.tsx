@@ -1,7 +1,7 @@
 import { CssVarsProvider } from "@mui/joy";
 import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
 import { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import RootRouter from "./pages/Router";
 import theme from "./utils/theme";
 

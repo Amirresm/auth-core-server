@@ -1,14 +1,11 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import Login from "./Login";
-import Register from "./Register";
+import { Route, Routes } from "react-router-dom";
+import AuthenticatePage from "./AuthenticatePage";
 
 export default function RootRouter() {
 	return (
 		<main className="flex h-full flex-col">
 			<Routes>
-				<Route path="/login" element={<Login />} />
-				<Route path="/register" element={<Register />} />
-				<Route path="*" element={<Navigate to="/login" replace />} />
+				<Route path="/:mode" element={<AuthenticatePage />} />
 			</Routes>
 		</main>
 	);

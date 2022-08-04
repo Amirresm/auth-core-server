@@ -6,18 +6,59 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Container from "src/components/Container";
+import axios from "src/utils/axios";
+import qs from "query-string";
+import { AxiosError } from "axios";
+import redirectWithParams from "src/utils/redirect/redirectWithParams";
 
 export default function Register() {
 	const navigate = useNavigate();
+	const location = useLocation();
 
-	const handleLogin = () => {
-		navigate("/login");
+	const registerMutation = useMutation<
+		any,
+		AxiosError,
+		{ username: string; password: string }
+	>(async ({ username, password }) => {
+		const { data } = await axios.post("/register", {
+			username,
+			password,
+		});
+		return data;
+	});
+
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+
+	const handleGoToLogin = () => {
+		navigate(`/login${location.search}`);
+	};
+
+	const handleRegister = async () => {
+		const { redirectTo } = qs.parse(location.search);
+		if (redirectTo && !Array.isArray(redirectTo)) {
+			registerMutation.mutate(
+				{
+					username,
+					password,
+				},
+				{
+					onSuccess: (data) => {
+						redirectWithParams(redirectTo, {
+							token: `token: ${data.token}`,
+						});
+					},
+				}
+			);
+		}
 	};
 
 	return (
-		<div className="flex h-full w-full items-center justify-center">
+		<div className="flex h-full w-full items-center justify-center px-4">
 			<Container maxWidth={400}>
 				<Grid container spacing={4}>
 					<Grid item xs={12}>
@@ -37,6 +78,8 @@ export default function Register() {
 									</InputAdornment>
 								),
 							}}
+							value={username}
+							onChange={(e) => setUsername(e.target.value)}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -52,8 +95,17 @@ export default function Register() {
 									</InputAdornment>
 								),
 							}}
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
 						/>
 					</Grid>
+					{registerMutation.error ? (
+						<Grid item xs={12}>
+							<Typography align="center" color="error">
+								{registerMutation.error.response?.data as string}
+							</Typography>
+						</Grid>
+					) : null}
 					<Grid container item xs={12} spacing={2}>
 						<Grid item xs={12}>
 							<Button
@@ -61,6 +113,7 @@ export default function Register() {
 								color="primary"
 								fullWidth
 								size="large"
+								onClick={handleRegister}
 							>
 								Register
 							</Button>
@@ -70,7 +123,7 @@ export default function Register() {
 								variant="text"
 								color="info"
 								fullWidth
-								onClick={handleLogin}
+								onClick={handleGoToLogin}
 							>
 								login instead
 							</Button>
