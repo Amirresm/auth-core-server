@@ -3,6 +3,7 @@ import config from "./config";
 import cors from "cors";
 import express from "express";
 import prisma, { connectPrisma } from "./database/prismaClient";
+import router from "./routes";
 
 const port = config.port || 4000;
 
@@ -28,6 +29,8 @@ app.use(express.static("public"));
 app.get("/hello", (req, res) => {
   res.send("Hello World!");
 });
+
+app.use("/api", router);
 
 connectPrisma().then(() => {
   app.listen(config.port, () => {
