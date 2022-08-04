@@ -23,14 +23,16 @@ app.use((req, res, next) => {
   console.log(`${req.method} ${req.url} --- ${req.ip}`);
   next();
 });
-
-app.use(express.static("public"));
-
 app.get("/hello", (req, res) => {
   res.send("Hello World!");
 });
 
+app.use(express.static("public"));
 app.use("/api", router);
+
+app.use("*", (req, res, next) => {
+  res.sendFile("public/index.html", { root: process.cwd() });
+});
 
 connectPrisma().then(() => {
   app.listen(config.port, () => {

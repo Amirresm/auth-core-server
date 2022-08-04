@@ -1,9 +1,9 @@
 import express from "express";
-import prisma from "src/database/prismaClient";
-import signJWT from "src/utils/jwt/signJWT";
-import verifyJWT from "src/utils/jwt/verifyJWT";
-import validator from "src/utils/validator";
 import { z } from "zod";
+import prisma from "../database/prismaClient";
+import signJWT from "../utils/jwt/signJWT";
+import verifyJWT from "../utils/jwt/verifyJWT";
+import validator from "../utils/validator";
 
 const router = express.Router();
 

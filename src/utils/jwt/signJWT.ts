@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import config from "src/config";
+import config from "../../config";
 
 export default function signJWT(data: Record<string, unknown>) {
   return jwt.sign(data, config.jwtSecret, {
