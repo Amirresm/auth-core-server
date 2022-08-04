@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import AuthenticatePage from "./AuthenticatePage";
 
 export default function RootRouter() {
@@ -6,6 +6,7 @@ export default function RootRouter() {
 		<main className="flex h-full flex-col">
 			<Routes>
 				<Route path="/:mode" element={<AuthenticatePage />} />
+				<Route path="*" element={<Navigate to="/login" replace />} />
 			</Routes>
 		</main>
 	);

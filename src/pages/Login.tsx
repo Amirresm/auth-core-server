@@ -1,8 +1,9 @@
-import { AccountCircle, Password } from "@mui/icons-material";
+import { AccountCircle, Logout, Password } from "@mui/icons-material";
 import {
 	Button,
 	CircularProgress,
 	Grid,
+	IconButton,
 	InputAdornment,
 	List,
 	ListItem,
@@ -19,12 +20,19 @@ import Container from "src/components/Container";
 import axios from "src/utils/axios";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { addUserToLS, getUsersFromLS } from "src/utils/ls/users";
+import {
+	addUserToLS,
+	deleteUserFromLS,
+	getUsersFromLS,
+	updateUserLastLoginInLS,
+} from "src/utils/ls/users";
 import redirectWithParams from "src/utils/redirect/redirectWithParams";
+import moment from "moment";
 
 export default function Login() {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const { redirectTo } = qs.parse(location.search);
 
 	const loginMutation = useMutation<
 		any,
@@ -58,7 +66,6 @@ export default function Login() {
 	const [token, setToken] = useState("");
 
 	useEffect(() => {
-		const { redirectTo } = qs.parse(location.search);
 		if (token && redirectTo && !Array.isArray(redirectTo)) {
 			redirectWithParams(redirectTo, {
 				token: `token: ${token}`,
@@ -85,7 +92,8 @@ export default function Login() {
 					setSuccessData(data.user);
 					setTimeout(() => {
 						setToken(data.token);
-					}, 1000);
+						if (!redirectTo) setSuccessData(undefined);
+					}, 2000);
 				},
 			}
 		);
@@ -98,9 +106,11 @@ export default function Login() {
 				{
 					onSuccess: (data) => {
 						setSuccessData(data);
+						updateUserLastLoginInLS(data.username);
 						setTimeout(() => {
 							setToken(verifyingToken);
-						}, 1000);
+							if (!redirectTo) setSuccessData(undefined);
+						}, 2000);
 					},
 					onError: () => {
 						setCustomError("Please login again");
@@ -118,12 +128,27 @@ export default function Login() {
 			<Grid item xs={12}>
 				<List>
 					{loggedInUsers.map((user) => (
-						<ListItem>
+						<ListItem
+							key={user.username}
+							secondaryAction={
+								<IconButton
+									onClick={() => {
+										deleteUserFromLS(user.username);
+									}}
+								>
+									<Logout />
+								</IconButton>
+							}
+							disablePadding
+						>
 							<ListItemButton onClick={verifyToken(user.token, user.username)}>
 								<ListItemIcon>
 									<AccountCircle />
 								</ListItemIcon>
-								<ListItemText primary={user.username} />
+								<ListItemText
+									primary={user.username}
+									secondary={`Last login: ${moment(user.lastLogin).fromNow()}`}
+								/>
 							</ListItemButton>
 						</ListItem>
 					))}
@@ -203,7 +228,7 @@ export default function Login() {
 						onClick={() => setUsingLoginForm((ps) => !ps)}
 						size="small"
 					>
-						{usingLoginForm ? "use current accounts" : "add account"}
+						{usingLoginForm ? "use a logged in account" : "add an account"}
 					</Button>
 				</Grid>
 			)}
@@ -215,7 +240,7 @@ export default function Login() {
 					onClick={handleGoToRegister}
 					size="small"
 				>
-					register instead
+					Create an account
 				</Button>
 			</Grid>
 		</Grid>
