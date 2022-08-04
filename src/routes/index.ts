@@ -88,7 +88,7 @@ router.post("/verify", (req, res) => {
 });
 
 router.get("/info", async (req, res) => {
-  const token = req.headers.authorization;
+  const token = req.headers.authorization?.split("token: ")[1];
   try {
     const data = verifyJWT(token || "");
     const user = await prisma.user.findUnique({
