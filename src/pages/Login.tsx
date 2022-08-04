@@ -68,7 +68,7 @@ export default function Login() {
 	useEffect(() => {
 		if (token && redirectTo && !Array.isArray(redirectTo)) {
 			redirectWithParams(redirectTo, {
-				token: `token: ${token}`,
+				token,
 			});
 		}
 	}, [token]);

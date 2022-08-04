@@ -49,7 +49,7 @@ export default function Register() {
 				{
 					onSuccess: (data) => {
 						redirectWithParams(redirectTo, {
-							token: `token: ${data.token}`,
+							token: data.token,
 						});
 					},
 				}
