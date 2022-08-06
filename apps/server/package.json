@@ -1,14 +1,14 @@
 {
-  "name": "auth-core",
+  "name": "@auth-core/server",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/src/index.js",
   "scripts": {
-    "dev": "nodemon src/index.ts",
-    "start": "node dist/src/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
+    "start": "cross-env NODE_ENV=production node dist/src/index.js",
+    "build": "yarn db:generate && tsc",
     "db:generate": "yarn prisma generate",
-    "db:push": "npx prisma db push",
-    "build": "yarn db:generate && tsc"
+    "db:push": "yarn prisma db push"
   },
   "author": "",
   "license": "ISC",
@@ -32,6 +32,7 @@
     "@types/jsonwebtoken": "^8.5.8",
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.6",
+    "cross-env": "^7.0.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.0.0",
     "typescript": "^4.7.4"

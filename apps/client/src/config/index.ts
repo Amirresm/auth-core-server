@@ -1,10 +1,11 @@
+import getURLFromEnv from "src/utils/getEnvURL";
+
 const config = {
-	baseUrl: import.meta.env.PROD
-		? `${window.location.origin}/api`
-		: ((import.meta.env.VITE_BASE_URL as string) || "").replace(
-				/HOSTNAME/,
-				window.location.hostname
-		  ),
+	baseUrl: getURLFromEnv(
+		import.meta.env.DEV,
+		`${window.location.origin}/api`,
+		import.meta.env.VITE_DEV_BASE_URL
+	),
 };
 
 export default config;

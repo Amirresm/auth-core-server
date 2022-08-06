@@ -23,9 +23,6 @@ app.use((req, res, next) => {
   console.log(`${req.method} ${req.url} --- ${req.ip}`);
   next();
 });
-app.get("/hello", (req, res) => {
-  res.send("Hello World!");
-});
 
 app.use(express.static("public"));
 app.use("/api", router);

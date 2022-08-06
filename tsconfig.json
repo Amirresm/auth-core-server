@@ -1,0 +1,11 @@
+{
+  "exclude": ["apps/**/dist/**"],
+  "references": [
+    {
+      "path": "./apps/client"
+    },
+    {
+      "path": "./apps/server"
+    }
+  ]
+}

@@ -21,5 +21,6 @@
     "strict": true,
     "paths": {}
   },
+  "buildOptions": { "verbose": true },
   "exclude": ["node_modules", "dist"]
 }
