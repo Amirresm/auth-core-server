@@ -1,0 +1,5 @@
+{
+  "platform": "node",
+  "app": "auth-core",
+  "port": 4000
+}

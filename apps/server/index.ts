@@ -1,9 +1,9 @@
 import bodyParser from "body-parser";
-import config from "./config";
+import config from "./src/config";
 import cors from "cors";
 import express from "express";
-import prisma, { connectPrisma } from "./database/prismaClient";
-import router from "./routes";
+import { connectPrisma } from "./src/database/prismaClient";
+import router from "./src/routes";
 
 const port = config.port || 4000;
 
@@ -24,11 +24,14 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static("public"));
 app.use("/api", router);
 
+app.use(express.static(__dirname + "/public"));
 app.use("*", (req, res, next) => {
-  res.sendFile("public/index.html", { root: process.cwd() });
+  res.setHeader("Cache-Control", "no-cache");
+  res.sendFile("public/index.html", {
+    root: __dirname,
+  });
 });
 
 connectPrisma().then(() => {
