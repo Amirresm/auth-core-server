@@ -1,8 +1,13 @@
+import path from "path";
+
 import bodyParser from "body-parser";
 import config from "./src/config";
 import cors from "cors";
+
 import express from "express";
+
 import { connectPrisma } from "./src/database/prismaClient";
+
 import router from "./src/routes";
 
 const port = config.port || 4000;
@@ -26,13 +31,21 @@ app.use((req, res, next) => {
 
 app.use("/api", router);
 
-app.use(express.static(__dirname + "/public"));
-app.use("*", (req, res, next) => {
-  res.setHeader("Cache-Control", "no-cache");
-  res.sendFile("public/index.html", {
-    root: __dirname,
+app
+  .use(
+    express.static(path.join(__dirname, "/public"), {
+      maxAge: "30 days",
+      setHeaders: (res, path) => {
+        console.log("Serving fresh content for", path);
+        if (["html", "htm"].find((ext) => path.endsWith(ext))) {
+          res.setHeader("Cache-Control", "public, max-age=0");
+        }
+      },
+    })
+  )
+  .get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/index.html"));
   });
-});
 
 connectPrisma().then(() => {
   app.listen(config.port, () => {
