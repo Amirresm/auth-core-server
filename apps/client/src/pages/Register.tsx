@@ -40,21 +40,21 @@ export default function Register() {
 
 	const handleRegister = async () => {
 		const { redirectTo } = qs.parse(location.search);
-		if (redirectTo && !Array.isArray(redirectTo)) {
-			registerMutation.mutate(
-				{
-					username,
-					password,
-				},
-				{
-					onSuccess: (data) => {
+		registerMutation.mutate(
+			{
+				username,
+				password,
+			},
+			{
+				onSuccess: (data) => {
+					if (redirectTo && !Array.isArray(redirectTo)) {
 						redirectWithParams(redirectTo, {
 							token: data.token,
 						});
-					},
-				}
-			);
-		}
+					}
+				},
+			}
+		);
 	};
 
 	return (
