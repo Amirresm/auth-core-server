@@ -1,7 +1,7 @@
 export default function getURLFromEnv(
 	mode: boolean,
-	prodValue?: string,
-	devValue?: string
+	devValue?: string,
+	prodValue?: string
 ): string {
 	if (mode)
 		return (
